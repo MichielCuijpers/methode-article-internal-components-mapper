@@ -25,6 +25,8 @@ public class InternalComponents {
     private final Date lastModified;
     private final String publishReference;
 
+    private final List<Block> blocks;
+
     public InternalComponents(@JsonProperty("design") final Design design,
                               @JsonProperty("tableOfContents") final TableOfContents tableOfContents,
                               @JsonProperty("topper") final Topper topper,
@@ -37,7 +39,8 @@ public class InternalComponents {
                               @JsonProperty("pushNotificationsCohort") final String pushNotificationsCohort,
                               @JsonProperty("uuid") final String uuid,
                               @JsonProperty("lastModified") final Date lastModified,
-                              @JsonProperty("publishReference") final String publishReference) {
+                              @JsonProperty("publishReference") final String publishReference,
+                              @JsonProperty("blocks") List<Block> blocks) {
         this.design = design;
         this.tableOfContents = tableOfContents;
         this.topper = topper;
@@ -52,6 +55,8 @@ public class InternalComponents {
         this.uuid = uuid;
         this.lastModified = lastModified;
         this.publishReference = publishReference;
+
+        this.blocks = blocks;
     }
 
     public Design getDesign() {
@@ -99,6 +104,8 @@ public class InternalComponents {
         return uuid;
     }
 
+    public List<Block> getBlocks() { return blocks;}
+
     @NotNull
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
@@ -132,6 +139,8 @@ public class InternalComponents {
         private String uuid;
         private String publishReference;
         private Date lastModified;
+
+        private List<Block> blocks;
 
         public Builder() {
         }
@@ -201,6 +210,11 @@ public class InternalComponents {
             return this;
         }
 
+        public InternalComponents.Builder withBlocks(List<Block> blocks) {
+            this.blocks = blocks;
+            return this;
+        }
+
         public InternalComponents.Builder withValuesFrom(InternalComponents content) {
             return this.withDesign(content.getDesign())
                     .withTableOfContents(content.getTableOfContents())
@@ -214,7 +228,8 @@ public class InternalComponents {
                     .withPushNotificationsCohort(content.getPushNotificationsCohort())
                     .withUuid(content.getUuid())
                     .withPublishReference(content.getPublishReference())
-                    .withLastModified(content.getLastModified());
+                    .withLastModified(content.getLastModified())
+                    .withBlocks(content.getBlocks());
         }
 
         public InternalComponents build() {
@@ -231,7 +246,8 @@ public class InternalComponents {
                     pushNotificationsCohort,
                     uuid,
                     lastModified,
-                    publishReference);
+                    publishReference,
+                    blocks);
         }
     }
 }
