@@ -451,7 +451,8 @@ public class InternalComponentsMapper {
 
     private String getNodeValueAsString(Node node) throws TransformerException {
         String nodeAsString = convertNodeToStringReturningEmptyIfNull(node);
-        return nodeAsString.replace("<" + node.getNodeName() + ">", "").replace("</" + node.getNodeName() + ">", "");
+        return nodeAsString.replace("<" + node.getNodeName() + ">", "").replace("</" + node.getNodeName() + ">", "")
+                .replace("<"+ node.getNodeName() + "/>", "");
     }
 
     private String extractListItemWiredIndexType(XPath xPath, Document attributesDocument) throws XPathExpressionException {
