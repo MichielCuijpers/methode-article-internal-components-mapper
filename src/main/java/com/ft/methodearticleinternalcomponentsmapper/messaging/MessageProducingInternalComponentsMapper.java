@@ -42,7 +42,7 @@ public class MessageProducingInternalComponentsMapper {
             );
         } catch (MethodeArticleMarkedDeletedException e) {
             LOGGER.info("Article with uuid={} marked as deleted. Delete message event is created.", methodeContent.getUuid());
-            message = messageBuilder.buildDeletedInternalComponentsMessage(methodeContent.getUuid(), transactionId, messageTimestamp);
+            message = messageBuilder.buildDeletedInternalComponentsMessage(methodeContent.getUuid(), transactionId, messageTimestamp, e.getType());
         } catch (MethodeArticleNotEligibleForPublishException e) {
             LOGGER.error("Article with uuid={} was no eligible for publishing.\n Stack trace was: {}", methodeContent.getUuid(), ExceptionUtils.getStackTrace(e));
             return;

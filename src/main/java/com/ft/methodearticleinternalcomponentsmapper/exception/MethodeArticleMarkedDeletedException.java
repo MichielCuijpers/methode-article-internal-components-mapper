@@ -4,7 +4,13 @@ import java.util.UUID;
 
 public class MethodeArticleMarkedDeletedException extends RuntimeException {
 
-    public MethodeArticleMarkedDeletedException(UUID uuid) {
+    private String type;
+
+    public MethodeArticleMarkedDeletedException(UUID uuid, String type) {
         super(String.format("Story has been marked as deleted %s", uuid));
+    }
+
+    public String getType() {
+        return type;
     }
 }

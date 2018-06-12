@@ -118,11 +118,16 @@ public class InternalComponentsMapper {
     public InternalComponents map(EomFile eomFile, String transactionId, Date lastModified, boolean preview) {
         try {
             UUID uuid = UUID.fromString(eomFile.getUuid());
+            final XPath xpath = XPathFactory.newInstance().newXPath();
+            final Document attributesDocument = getAttributesDocument(eomFile);
+            final Document valueDocument = getValueDocument(eomFile);
 
             String sourceCode = retrieveSourceCode(eomFile.getAttributes());
             if (!SourceCode.FT.equals(sourceCode) && !SourceCode.CONTENT_PLACEHOLDER.equals(sourceCode) && !SourceCode.DynamicContent.equals(sourceCode)) {
                 throw new MethodeArticleNotEligibleForPublishException(uuid);
             }
+
+            final String type = determineType(xpath, attributesDocument, sourceCode);
 
             Boolean previewParam = SourceCode.FT.equals(sourceCode) ? preview : null;
             PublishingStatus status = articleValidators.get(sourceCode).getPublishingStatus(eomFile, transactionId, previewParam);
@@ -130,14 +135,8 @@ public class InternalComponentsMapper {
                 case INELIGIBLE:
                     throw new MethodeArticleNotEligibleForPublishException(uuid);
                 case DELETED:
-                    throw new MethodeArticleMarkedDeletedException(uuid);
+                    throw new MethodeArticleMarkedDeletedException(uuid, type);
             }
-
-            final XPath xpath = XPathFactory.newInstance().newXPath();
-            final Document attributesDocument = getAttributesDocument(eomFile);
-            final Document valueDocument = getValueDocument(eomFile);
-            final String type = determineType(xpath, attributesDocument, sourceCode);
-
 
             final Design design = extractDesign(xpath, valueDocument, attributesDocument);
             final TableOfContents tableOfContents = extractTableOfContents(xpath, valueDocument);

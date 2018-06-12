@@ -20,6 +20,7 @@ public class InternalComponents {
     private final AlternativeTitles alternativeTitles;
     private final AlternativeStandfirsts alternativeStandfirsts;
     private final String pushNotificationsCohort;
+    private final String type;
 
     private final String uuid;
     private final Date lastModified;
@@ -40,7 +41,8 @@ public class InternalComponents {
                               @JsonProperty("uuid") final String uuid,
                               @JsonProperty("lastModified") final Date lastModified,
                               @JsonProperty("publishReference") final String publishReference,
-                              @JsonProperty("blocks") List<Block> blocks) {
+                              @JsonProperty("blocks") List<Block> blocks,
+                              @JsonProperty("type") String type) {
         this.design = design;
         this.tableOfContents = tableOfContents;
         this.topper = topper;
@@ -57,6 +59,7 @@ public class InternalComponents {
         this.publishReference = publishReference;
 
         this.blocks = blocks;
+        this.type = type;
     }
 
     public Design getDesign() {
@@ -106,6 +109,8 @@ public class InternalComponents {
 
     public List<Block> getBlocks() { return blocks;}
 
+    public String getType() { return type;}
+
     @NotNull
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
@@ -141,6 +146,7 @@ public class InternalComponents {
         private Date lastModified;
 
         private List<Block> blocks;
+        private String type;
 
         public Builder() {
         }
@@ -215,6 +221,11 @@ public class InternalComponents {
             return this;
         }
 
+        public InternalComponents.Builder withType(String type) {
+            this.type = type;
+            return this;
+        }
+
         public InternalComponents.Builder withValuesFrom(InternalComponents content) {
             return this.withDesign(content.getDesign())
                     .withTableOfContents(content.getTableOfContents())
@@ -229,7 +240,8 @@ public class InternalComponents {
                     .withUuid(content.getUuid())
                     .withPublishReference(content.getPublishReference())
                     .withLastModified(content.getLastModified())
-                    .withBlocks(content.getBlocks());
+                    .withBlocks(content.getBlocks())
+                    .withType(content.getType());
         }
 
         public InternalComponents build() {
@@ -247,7 +259,8 @@ public class InternalComponents {
                     uuid,
                     lastModified,
                     publishReference,
-                    blocks);
+                    blocks,
+                    type);
         }
     }
 }

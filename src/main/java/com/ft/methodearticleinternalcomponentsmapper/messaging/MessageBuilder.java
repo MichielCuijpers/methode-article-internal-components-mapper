@@ -29,6 +29,8 @@ public class MessageBuilder {
     private final UriBuilder contentUriBuilder;
     private final SystemId systemId;
     private final ObjectMapper objectMapper;
+    private final String TYPE_BASE_URL = "http://www.ft.com/ontology/content/";
+
 
     public MessageBuilder(UriBuilder contentUriBuilder, String systemId, ObjectMapper objectMapper) {
         this.contentUriBuilder = contentUriBuilder;
@@ -40,17 +42,19 @@ public class MessageBuilder {
         MessageBody msgBody = new MessageBody(
                 internalComponents,
                 contentUriBuilder.build(internalComponents.getUuid()).toString(),
-                RFC3339_FMT.format(OffsetDateTime.ofInstant(internalComponents.getLastModified().toInstant(), UTC))
+                RFC3339_FMT.format(OffsetDateTime.ofInstant(internalComponents.getLastModified().toInstant(), UTC)),
+                TYPE_BASE_URL + internalComponents.getType()
         );
 
         return buildMessage(internalComponents.getUuid(), internalComponents.getPublishReference(), msgBody);
     }
 
-    Message buildDeletedInternalComponentsMessage(String uuid, String publishReference, Date lastModified) {
+    Message buildDeletedInternalComponentsMessage(String uuid, String publishReference, Date lastModified, String contentType) {
         MessageBody msgBody = new MessageBody(
                 null,
                 contentUriBuilder.build(uuid).toString(),
-                RFC3339_FMT.format(OffsetDateTime.ofInstant(lastModified.toInstant(), UTC))
+                RFC3339_FMT.format(OffsetDateTime.ofInstant(lastModified.toInstant(), UTC)),
+                TYPE_BASE_URL + contentType
         );
         return buildMessage(uuid, publishReference, msgBody);
     }
@@ -82,6 +86,8 @@ public class MessageBuilder {
         public final String contentUri;
         @JsonProperty("lastModified")
         public final String lastModified;
+        @JsonProperty("contentType")
+        public final String contentType;
 
         MessageBody(
                 @JsonProperty("payload")
@@ -89,10 +95,13 @@ public class MessageBuilder {
                 @JsonProperty("contentUri")
                         String contentUri,
                 @JsonProperty("lastModified")
-                        String lastModified) {
+                        String lastModified,
+                @JsonProperty("contentType")
+                        String contentType) {
             this.contentUri = contentUri;
             this.payload = payload;
             this.lastModified = lastModified;
+            this.contentType = contentType;
         }
     }
 }
