@@ -485,8 +485,8 @@ public class InternalComponentsMapper {
         return Summary.builder().withBodyXML(transformedBodyXML).withDisplayPosition(displayPosition).build();
     }
 
-    private String extractPushNotificationsText(XPath xPath, Document attributesDocument) throws XPathExpressionException {
-        String pushNotificationsText = Strings.nullToEmpty(xPath.evaluate(XPATH_PUSH_NOTIFICATION_TEXT, attributesDocument));
+    private String extractPushNotificationsText(XPath xPath, Document valueDocument) throws XPathExpressionException {
+        String pushNotificationsText = Strings.nullToEmpty(xPath.evaluate(XPATH_PUSH_NOTIFICATION_TEXT, valueDocument));
         if (Strings.isNullOrEmpty(pushNotificationsText)) {
             return null;
         }
