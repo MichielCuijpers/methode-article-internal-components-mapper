@@ -96,6 +96,7 @@ public class InternalComponentsMapper {
     private static final String XPATH_DESIGN_THEME = "/ObjectMetadata/OutputChannels/DIFTcom/DesignTheme";
     private static final String XPATH_DESIGN_LAYOUT = "/ObjectMetadata/OutputChannels/DIFTcom/DesignLayout";
     private static final String XPATH_PUSH_NOTIFICATION_COHORT = "/ObjectMetadata/OutputChannels/DIFTcom/pushNotification";
+    private static final String XPATH_PUSH_NOTIFICATION_TEXT = "/doc/lead/push-notification/ln";
     private static final Set<String> BLOG_CATEGORIES =
             ImmutableSet.of("blog", "webchat-live-blogs", "webchat-live-qa", "webchat-markets-live", "fastft");
 
@@ -154,6 +155,7 @@ public class InternalComponentsMapper {
                     .build();
             final Summary summary = extractSummary(xpath, valueDocument, transactionId, uuid.toString());
             final String pushNotificationsCohort = extractPushNotificationsCohort(xpath, attributesDocument);
+            final String pushNotificationsText = extractPushNotificationsText(xpath, attributesDocument);
 
             InternalComponents.Builder internalComponentsBuilder = InternalComponents.builder()
                     .withUuid(uuid.toString())
@@ -167,7 +169,8 @@ public class InternalComponentsMapper {
                     .withAlternativeTitles(alternativeTitles)
                     .withAlternativeStandfirsts(alternativeStandfirsts)
                     .withSummary(summary)
-                    .withPushNotificationsCohort(pushNotificationsCohort);
+                    .withPushNotificationsCohort(pushNotificationsCohort)
+                    .withPushNotificationsText(pushNotificationsText);
 
             if (SourceCode.CONTENT_PLACEHOLDER.equals(sourceCode)) {
                 if (isWordpressBlogContentPlaceholder(eomFile, xpath)) {
@@ -480,5 +483,14 @@ public class InternalComponentsMapper {
         String displayPosition = Strings.emptyToNull(xpath.evaluate(SUMMARY_TAG_XPATH + "/@display-position", eomFile).trim());
 
         return Summary.builder().withBodyXML(transformedBodyXML).withDisplayPosition(displayPosition).build();
+    }
+
+    private String extractPushNotificationsText(XPath xPath, Document attributesDocument) throws XPathExpressionException {
+        String pushNotificationsText = Strings.nullToEmpty(xPath.evaluate(XPATH_PUSH_NOTIFICATION_TEXT, attributesDocument));
+        if (Strings.isNullOrEmpty(pushNotificationsText)) {
+            return null;
+        }
+
+        return pushNotificationsText;
     }
 }
