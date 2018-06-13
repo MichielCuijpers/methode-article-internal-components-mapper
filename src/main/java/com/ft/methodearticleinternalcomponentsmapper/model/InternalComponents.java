@@ -98,7 +98,9 @@ public class InternalComponents {
         return pushNotificationsCohort;
     }
 
-    public String getPushNotificationsText() { return pushNotificationsText; }
+    public String getPushNotificationsText() {
+        return pushNotificationsText;
+    }
 
     public String getUuid() {
         return uuid;

@@ -96,7 +96,7 @@ public class InternalComponentsMapper {
     private static final String XPATH_DESIGN_THEME = "/ObjectMetadata/OutputChannels/DIFTcom/DesignTheme";
     private static final String XPATH_DESIGN_LAYOUT = "/ObjectMetadata/OutputChannels/DIFTcom/DesignLayout";
     private static final String XPATH_PUSH_NOTIFICATION_COHORT = "/ObjectMetadata/OutputChannels/DIFTcom/pushNotification";
-    private static final String XPATH_PUSH_NOTIFICATION_TEXT = "/doc/lead/push-notification/ln";
+    private static final String XPATH_PUSH_NOTIFICATION_TEXT = "/doc/lead/push-notification-text/ln";
     private static final Set<String> BLOG_CATEGORIES =
             ImmutableSet.of("blog", "webchat-live-blogs", "webchat-live-qa", "webchat-markets-live", "fastft");
 
@@ -155,7 +155,7 @@ public class InternalComponentsMapper {
                     .build();
             final Summary summary = extractSummary(xpath, valueDocument, transactionId, uuid.toString());
             final String pushNotificationsCohort = extractPushNotificationsCohort(xpath, attributesDocument);
-            final String pushNotificationsText = extractPushNotificationsText(xpath, attributesDocument);
+            final String pushNotificationsText = extractPushNotificationsText(xpath, valueDocument);
 
             InternalComponents.Builder internalComponentsBuilder = InternalComponents.builder()
                     .withUuid(uuid.toString())
