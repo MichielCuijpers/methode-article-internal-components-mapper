@@ -56,8 +56,10 @@ public class InternalComponentsMapperTest {
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_GLOBAL = "Global_breaking_news";
     private static final String EXPECTED_PUSH_NOTIFICATIONS_COHORT_GLOBAL = "global-breaking-news";
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_NONE = "None";
+    private static final String VALUE_PUSH_NOTIFICATIONS_TEXT = "My push notification text";
 
     private static final String PLACEHOLDER_PUSH_NOTIFICATIONS_COHORT = "pushNotificationsCohort";
+    private static final String PLACEHOLDER_PUSH_NOTIFICATIONS_TEXT = "push-notification-text";
 
     private static final String API_HOST = "test.api.ft.com";
     private static final String ARTICLE_UUID = UUID.randomUUID().toString();
@@ -607,6 +609,21 @@ public class InternalComponentsMapperTest {
         testPushNotificationsCohort(ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_NONE, null);
     }
 
+    @Test
+    public void testNotificationsTextIsSet() {
+        testPushNotificationsText(VALUE_PUSH_NOTIFICATIONS_TEXT, VALUE_PUSH_NOTIFICATIONS_TEXT);
+    }
+
+    @Test
+    public void testNotificationsTextIsEmpty() {
+        testPushNotificationsText("", null);
+    }
+
+    @Test
+    public void testNotificationsTextIsNull() {
+        testPushNotificationsText(null, null);
+    }
+
     private void testPushNotificationsCohort(String attributePushNotificationsCohort, String expectedPushNotificationsCohort) {
         attributesPlaceholdersValues.put(PLACEHOLDER_PUSH_NOTIFICATIONS_COHORT, attributePushNotificationsCohort);
         eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
@@ -615,6 +632,13 @@ public class InternalComponentsMapperTest {
         assertThat(actual.getPushNotificationsCohort(), equalTo(expectedPushNotificationsCohort));
     }
 
+    private void testPushNotificationsText(String valuePushNotificationsText, String expectedPushNotificationsText) {
+        valuePlaceholdersValues.put(PLACEHOLDER_PUSH_NOTIFICATIONS_TEXT, valuePushNotificationsText);
+        eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
+
+        InternalComponents actual = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
+        assertThat(actual.getPushNotificationsText(), equalTo(expectedPushNotificationsText));
+    }
     private EomFile createEomFile(Map<String, Object> valuePlaceholdersValues,
                                   Map<String, Object> attributesPlaceholdersValues) {
         return new EomFile.Builder()
@@ -626,7 +650,6 @@ public class InternalComponentsMapperTest {
                 .withWebUrl(null)
                 .build();
     }
-
     private static byte[] buildEomFileValue(Map<String, Object> valuePlaceholdersValues) {
         Template mustache = Mustache.compiler().escapeHTML(false).compile(ARTICLE_WITH_ALL_COMPONENTS);
         return mustache.execute(valuePlaceholdersValues).getBytes(UTF_8);
