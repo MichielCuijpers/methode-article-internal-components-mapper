@@ -152,7 +152,7 @@ public class InternalComponentsMapper {
                     .build();
             final Summary summary = extractSummary(xpath, valueDocument, transactionId, uuid.toString());
             final String pushNotificationsCohort = extractPushNotificationsCohort(xpath, attributesDocument);
-            final List<Block> blocks = getBlocks(xpath, valueDocument, type);
+            final List<Block> blocks = getBlocks(xpath, valueDocument, type, transactionId);
 
 
             InternalComponents.Builder internalComponentsBuilder = InternalComponents.builder()
@@ -494,7 +494,7 @@ public class InternalComponentsMapper {
         return Summary.builder().withBodyXML(transformedBodyXML).withDisplayPosition(displayPosition).build();
     }
 
-    private List<Block> getBlocks(XPath xpath, Document value, String type) throws XPathExpressionException, TransformerException {
+    private List<Block> getBlocks(XPath xpath, Document value, String type, String txID) throws XPathExpressionException, TransformerException {
         if (!Type.DYNAMIC_CONTENT.equals(type)) {
             return null;
         }
@@ -508,8 +508,10 @@ public class InternalComponentsMapper {
 
             String key = getNodeValueAsString(keyNode);
             String valueXML = getNodeValueAsString(valueXMLNode);
+            String transformedValueXML = bodyTransformer.transform("<body>" + valueXML + "</body>", txID);
+            String valueXMLWithoutBodyTags = transformedValueXML.replace("<body>", "").replace("</body>", "");
 
-            resultedBlocks.add(new Block(key, valueXML, BLOCK_TYPE));
+            resultedBlocks.add(new Block(key, valueXMLWithoutBodyTags, BLOCK_TYPE));
         }
 
         return resultedBlocks;
