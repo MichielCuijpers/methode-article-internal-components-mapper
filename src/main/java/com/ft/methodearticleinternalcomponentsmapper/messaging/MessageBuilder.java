@@ -25,11 +25,11 @@ public class MessageBuilder {
     private static final String CMS_CONTENT_PUBLISHED = "cms-content-published";
     private static final DateTimeFormatter RFC3339_FMT =
             DateTimeFormatter.ISO_OFFSET_DATE_TIME.withResolverStyle(ResolverStyle.STRICT);
+    private static final String TYPE_BASE_URL = "http://www.ft.com/ontology/content/";
 
     private final UriBuilder contentUriBuilder;
     private final SystemId systemId;
     private final ObjectMapper objectMapper;
-    private final String TYPE_BASE_URL = "http://www.ft.com/ontology/content/";
 
 
     public MessageBuilder(UriBuilder contentUriBuilder, String systemId, ObjectMapper objectMapper) {

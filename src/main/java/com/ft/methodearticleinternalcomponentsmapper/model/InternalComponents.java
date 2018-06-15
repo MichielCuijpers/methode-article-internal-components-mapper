@@ -107,9 +107,11 @@ public class InternalComponents {
         return uuid;
     }
 
-    public List<Block> getBlocks() { return blocks;}
+    public List<Block> getBlocks() {
+        return blocks;}
 
-    public String getType() { return type;}
+    public String getType() {
+        return type;}
 
     @NotNull
     @JsonFormat(

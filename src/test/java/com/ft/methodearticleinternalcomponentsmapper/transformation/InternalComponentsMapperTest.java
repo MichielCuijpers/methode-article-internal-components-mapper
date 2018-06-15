@@ -46,6 +46,8 @@ public class InternalComponentsMapperTest {
     private static final String ARTICLE_WITH_ALL_COMPONENTS = FileUtils.readFile("article/article_with_all_components.xml.mustache");
 
     private static final String TRANSFORMED_BODY = "<body><p>some other random text</p></body>";
+    private static final String BLOCKS_VALUE_IS_SET = "<body>x-value</body>";
+    private static final String BLOCKS_VALUE_IS_EMPTY = "<body></body>";
     private static final String EOM_TYPE_COMPOUND_STORY = "EOM::CompoundStory";
 
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_UK = "UK_breaking_news";
@@ -607,14 +609,12 @@ public class InternalComponentsMapperTest {
 
     @Test
     public void testBlocksIsSet() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
         Map<String, Object> templateValues = new HashMap<>();
         templateValues.put("blocks", Boolean.TRUE);
         templateValues.put("block-1", Boolean.TRUE);
         templateValues.put("block-name-1", "x");
         templateValues.put("block-html-value-1", "x-value");
-        templateValues.put("block-2", Boolean.TRUE);
-        templateValues.put("block-name-2", "y");
-        templateValues.put("block-html-value-2", "y-value");
 
         Map<String, Object> attributesTemplateValues = new HashMap<>();
         attributesTemplateValues.put("sourceCode", "DynamicContent");
@@ -622,25 +622,20 @@ public class InternalComponentsMapperTest {
         final EomFile eomFile = createDynamicContent(templateValues, attributesTemplateValues);
         final InternalComponents internalComponents = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
         assertThat(internalComponents.getBlocks(), notNullValue());
-        assertThat(internalComponents.getBlocks().size(), equalTo(2));
+        assertThat(internalComponents.getBlocks().size(), equalTo(1));
         assertThat(internalComponents.getBlocks().get(0).getKey(), equalTo("x"));
         assertThat(internalComponents.getBlocks().get(0).getValueXML(), equalTo("x-value"));
         assertThat(internalComponents.getBlocks().get(0).getType(), equalTo("html-block"));
-        assertThat(internalComponents.getBlocks().get(1).getKey(), equalTo("y"));
-        assertThat(internalComponents.getBlocks().get(1).getValueXML(), equalTo("y-value"));
-        assertThat(internalComponents.getBlocks().get(1).getType(), equalTo("html-block"));
     }
 
     @Test
-    public void testKeyIsEmptyValueIsSet() {
+    public void testBlocksKeyIsEmptyValueIsSet() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
         Map<String, Object> templateValues = new HashMap<>();
         templateValues.put("blocks", Boolean.TRUE);
         templateValues.put("block-1", Boolean.TRUE);
         templateValues.put("block-name-1", "");
         templateValues.put("block-html-value-1", "x-value");
-        templateValues.put("block-2", Boolean.TRUE);
-        templateValues.put("block-name-2", "");
-        templateValues.put("block-html-value-2", "y-value");
 
         Map<String, Object> attributesTemplateValues = new HashMap<>();
         attributesTemplateValues.put("sourceCode", "DynamicContent");
@@ -648,65 +643,10 @@ public class InternalComponentsMapperTest {
         final EomFile eomFile = createDynamicContent(templateValues, attributesTemplateValues);
         final InternalComponents internalComponents = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
         assertThat(internalComponents.getBlocks(), notNullValue());
-        assertThat(internalComponents.getBlocks().size(), equalTo(2));
+        assertThat(internalComponents.getBlocks().size(), equalTo(1));
         assertThat(internalComponents.getBlocks().get(0).getKey(), equalTo(""));
         assertThat(internalComponents.getBlocks().get(0).getValueXML(), equalTo("x-value"));
         assertThat(internalComponents.getBlocks().get(0).getType(), equalTo("html-block"));
-        assertThat(internalComponents.getBlocks().get(1).getKey(), equalTo(""));
-        assertThat(internalComponents.getBlocks().get(1).getValueXML(), equalTo("y-value"));
-        assertThat(internalComponents.getBlocks().get(1).getType(), equalTo("html-block"));
-    }
-
-    @Test
-    public void testKeyIsSetValueIsEmpty() {
-        Map<String, Object> templateValues = new HashMap<>();
-        templateValues.put("blocks", Boolean.TRUE);
-        templateValues.put("block-1", Boolean.TRUE);
-        templateValues.put("block-name-1", "x");
-        templateValues.put("block-html-value-1", "");
-        templateValues.put("block-2", Boolean.TRUE);
-        templateValues.put("block-name-2", "y");
-        templateValues.put("block-html-value-2", "");
-
-        Map<String, Object> attributesTemplateValues = new HashMap<>();
-        attributesTemplateValues.put("sourceCode", "DynamicContent");
-
-        final EomFile eomFile = createDynamicContent(templateValues, attributesTemplateValues);
-        final InternalComponents internalComponents = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
-        assertThat(internalComponents.getBlocks(), notNullValue());
-        assertThat(internalComponents.getBlocks().size(), equalTo(2));
-        assertThat(internalComponents.getBlocks().get(0).getKey(), equalTo("x"));
-        assertThat(internalComponents.getBlocks().get(0).getValueXML(), equalTo(""));
-        assertThat(internalComponents.getBlocks().get(0).getType(), equalTo("html-block"));
-        assertThat(internalComponents.getBlocks().get(1).getKey(), equalTo("y"));
-        assertThat(internalComponents.getBlocks().get(1).getValueXML(), equalTo(""));
-        assertThat(internalComponents.getBlocks().get(1).getType(), equalTo("html-block"));
-    }
-
-    @Test
-    public void testBlocksIsEmpty() {
-        Map<String, Object> templateValues = new HashMap<>();
-        templateValues.put("blocks", Boolean.TRUE);
-        templateValues.put("block-1", Boolean.TRUE);
-        templateValues.put("block-name-1", "");
-        templateValues.put("block-html-value-1", "");
-        templateValues.put("block-2", Boolean.TRUE);
-        templateValues.put("block-name-2", "y");
-        templateValues.put("block-html-value-2", "y-value");
-
-        Map<String, Object> attributesTemplateValues = new HashMap<>();
-        attributesTemplateValues.put("sourceCode", "DynamicContent");
-
-        final EomFile eomFile = createDynamicContent(templateValues, attributesTemplateValues);
-        final InternalComponents internalComponents = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
-        assertThat(internalComponents.getBlocks(), notNullValue());
-        assertThat(internalComponents.getBlocks().size(), equalTo(2));
-        assertThat(internalComponents.getBlocks().get(0).getKey(), equalTo(""));
-        assertThat(internalComponents.getBlocks().get(0).getValueXML(), equalTo(""));
-        assertThat(internalComponents.getBlocks().get(0).getType(), equalTo("html-block"));
-        assertThat(internalComponents.getBlocks().get(1).getKey(), equalTo("y"));
-        assertThat(internalComponents.getBlocks().get(1).getValueXML(), equalTo("y-value"));
-        assertThat(internalComponents.getBlocks().get(1).getType(), equalTo("html-block"));
     }
 
     private void testPushNotificationsCohort(String attributePushNotificationsCohort, String expectedPushNotificationsCohort) {

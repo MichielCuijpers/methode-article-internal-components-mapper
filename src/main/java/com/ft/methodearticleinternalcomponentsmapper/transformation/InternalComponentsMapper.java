@@ -44,7 +44,6 @@ import java.util.UUID;
 
 import static com.ft.methodearticleinternalcomponentsmapper.model.EomFile.SOURCE_ATTR_XPATH;
 import static com.ft.methodearticleinternalcomponentsmapper.transformation.InternalComponentsMapper.Type.CONTENT_PACKAGE;
-import static com.ft.methodearticleinternalcomponentsmapper.transformation.InternalComponentsMapper.Type.DYNAMIC_CONTENT;
 import static com.ft.uuidutils.DeriveUUID.Salts.IMAGE_SET;
 
 public class InternalComponentsMapper {
@@ -102,7 +101,6 @@ public class InternalComponentsMapper {
     private static final String PUSH_NOTIFICATION_COHORT_NONE = "None";
     private static final String BLOCK_TYPE = "html-block";
 
-
     public InternalComponentsMapper(FieldTransformer bodyTransformer,
                                     BodyProcessor htmlFieldProcessor,
                                     BlogUuidResolver blogUuidResolver,
@@ -153,7 +151,6 @@ public class InternalComponentsMapper {
             final Summary summary = extractSummary(xpath, valueDocument, transactionId, uuid.toString());
             final String pushNotificationsCohort = extractPushNotificationsCohort(xpath, attributesDocument);
             final List<Block> blocks = getBlocks(xpath, valueDocument, type, transactionId);
-
 
             InternalComponents.Builder internalComponentsBuilder = InternalComponents.builder()
                     .withUuid(uuid.toString())
