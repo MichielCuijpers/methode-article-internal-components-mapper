@@ -63,8 +63,10 @@ public class InternalComponentsMapperTest {
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_GLOBAL = "Global_breaking_news";
     private static final String EXPECTED_PUSH_NOTIFICATIONS_COHORT_GLOBAL = "global-breaking-news";
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_NONE = "None";
+    private static final String VALUE_PUSH_NOTIFICATIONS_TEXT = "My push notification text";
 
     private static final String PLACEHOLDER_PUSH_NOTIFICATIONS_COHORT = "pushNotificationsCohort";
+    private static final String PLACEHOLDER_PUSH_NOTIFICATIONS_TEXT = "push-notification-text";
 
     private static final String API_HOST = "test.api.ft.com";
     private static final String ARTICLE_UUID = UUID.randomUUID().toString();
@@ -616,6 +618,21 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
+    public void testNotificationsTextIsSet() {
+        testPushNotificationsText(VALUE_PUSH_NOTIFICATIONS_TEXT, VALUE_PUSH_NOTIFICATIONS_TEXT);
+    }
+
+    @Test
+    public void testNotificationsTextIsEmpty() {
+        testPushNotificationsText("", null);
+    }
+
+    @Test
+    public void testNotificationsTextIsNull() {
+        testPushNotificationsText(null, null);
+    }
+
+    @Test
     public void testBlocksIsSet() {
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_SET);
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
@@ -680,6 +697,13 @@ public class InternalComponentsMapperTest {
         assertThat(actual.getPushNotificationsCohort(), equalTo(expectedPushNotificationsCohort));
     }
 
+    private void testPushNotificationsText(String valuePushNotificationsText, String expectedPushNotificationsText) {
+        valuePlaceholdersValues.put(PLACEHOLDER_PUSH_NOTIFICATIONS_TEXT, valuePushNotificationsText);
+        eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
+
+        InternalComponents actual = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
+        assertThat(actual.getPushNotificationsText(), equalTo(expectedPushNotificationsText));
+    }
     private EomFile createEomFile(Map<String, Object> valuePlaceholdersValues,
                                   Map<String, Object> attributesPlaceholdersValues) {
         return new EomFile.Builder()
