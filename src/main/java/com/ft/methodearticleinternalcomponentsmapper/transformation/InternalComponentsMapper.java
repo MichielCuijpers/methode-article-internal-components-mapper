@@ -2,11 +2,20 @@ package com.ft.methodearticleinternalcomponentsmapper.transformation;
 
 import com.ft.bodyprocessing.BodyProcessor;
 import com.ft.methodearticleinternalcomponentsmapper.exception.InvalidMethodeContentException;
-import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleMarkedDeletedException;
+import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMarkedDeletedException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleNotEligibleForPublishException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMissingFieldException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.TransformationException;
-import com.ft.methodearticleinternalcomponentsmapper.model.*;
+import com.ft.methodearticleinternalcomponentsmapper.model.AlternativeStandfirsts;
+import com.ft.methodearticleinternalcomponentsmapper.model.AlternativeTitles;
+import com.ft.methodearticleinternalcomponentsmapper.model.Block;
+import com.ft.methodearticleinternalcomponentsmapper.model.Design;
+import com.ft.methodearticleinternalcomponentsmapper.model.EomFile;
+import com.ft.methodearticleinternalcomponentsmapper.model.Image;
+import com.ft.methodearticleinternalcomponentsmapper.model.InternalComponents;
+import com.ft.methodearticleinternalcomponentsmapper.model.Summary;
+import com.ft.methodearticleinternalcomponentsmapper.model.TableOfContents;
+import com.ft.methodearticleinternalcomponentsmapper.model.Topper;
 import com.ft.methodearticleinternalcomponentsmapper.validation.MethodeArticleValidator;
 import com.ft.methodearticleinternalcomponentsmapper.validation.PublishingStatus;
 import com.ft.uuidutils.DeriveUUID;
@@ -14,7 +23,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -120,7 +132,7 @@ public class InternalComponentsMapper {
             final Document attributesDocument = getAttributesDocument(eomFile);
             final Document valueDocument = getValueDocument(eomFile);
 
-            String sourceCode = retrieveSourceCode(eomFile.getAttributes());
+            String sourceCode = xpath.evaluate(SOURCE_ATTR_XPATH, attributesDocument);
             if (!SourceCode.FT.equals(sourceCode) && !SourceCode.CONTENT_PLACEHOLDER.equals(sourceCode) && !SourceCode.DynamicContent.equals(sourceCode)) {
                 throw new MethodeArticleNotEligibleForPublishException(uuid);
             }
@@ -133,7 +145,7 @@ public class InternalComponentsMapper {
                 case INELIGIBLE:
                     throw new MethodeArticleNotEligibleForPublishException(uuid);
                 case DELETED:
-                    throw new MethodeArticleMarkedDeletedException(uuid, type);
+                    throw new MethodeMarkedDeletedException(uuid, type);
             }
 
             final Design design = extractDesign(xpath, valueDocument, attributesDocument);
@@ -216,12 +228,6 @@ public class InternalComponentsMapper {
         return writer.toString();
     }
 
-    private String retrieveSourceCode(String attributes) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
-        Document attributesDocument = getDocumentBuilder().parse(new InputSource(new StringReader(attributes)));
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        return xpath.evaluate(SOURCE_ATTR_XPATH, attributesDocument);
-    }
-
     private String transformBody(XPath xpath, String sourceBodyXML, Document attributesDocument, Document valueDocument, String transactionId, UUID uuid, boolean preview) throws ParserConfigurationException, IOException, SAXException, XPathExpressionException, TransformerException {
         TransformationMode mode = preview ? TransformationMode.PREVIEW : TransformationMode.PUBLISH;
         String sourceCode = xpath.evaluate(SOURCE_ATTR_XPATH, attributesDocument);
@@ -234,7 +240,7 @@ public class InternalComponentsMapper {
         return postProcessedTransformedBody;
     }
 
-    private String determineType(final XPath xpath, final Document attributesDocument, String sourceCode) throws XPathExpressionException, TransformerException {
+    private String determineType(final XPath xpath, final Document attributesDocument, String sourceCode) throws XPathExpressionException {
         final String isContentPackage = xpath.evaluate(XPATH_CONTENT_PACKAGE, attributesDocument);
         if (Boolean.TRUE.toString().equalsIgnoreCase(isContentPackage)) {
             return CONTENT_PACKAGE;

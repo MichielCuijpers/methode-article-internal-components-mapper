@@ -2,17 +2,21 @@ package com.ft.methodearticleinternalcomponentsmapper.transformation;
 
 import com.ft.bodyprocessing.html.Html5SelfClosingTagBodyProcessor;
 import com.ft.common.FileUtils;
-import com.ft.methodearticleinternalcomponentsmapper.exception.BodyTransformationException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.InvalidMethodeContentException;
-import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleMarkedDeletedException;
+import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMarkedDeletedException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleNotEligibleForPublishException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMissingFieldException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.UuidResolverException;
-import com.ft.methodearticleinternalcomponentsmapper.model.*;
+import com.ft.methodearticleinternalcomponentsmapper.model.Design;
+import com.ft.methodearticleinternalcomponentsmapper.model.EomFile;
+import com.ft.methodearticleinternalcomponentsmapper.model.Image;
+import com.ft.methodearticleinternalcomponentsmapper.model.InternalComponents;
 import com.ft.methodearticleinternalcomponentsmapper.validation.MethodeArticleValidator;
 import com.ft.methodearticleinternalcomponentsmapper.validation.PublishingStatus;
+
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +32,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -36,7 +39,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.anyVararg;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -53,6 +55,7 @@ public class InternalComponentsMapperTest {
     private static final String BLOCKS_VALUE_IS_SET = "<body>x-value</body>";
     private static final String BLOCKS_VALUE_IS_EMPTY = "<body></body>";
     private static final String BLOCKS_KEY_IS_EMPTY = "";
+    private static final String BLOCKS_KEY_IS_SET = "x";
     private static final String EOM_TYPE_COMPOUND_STORY = "EOM::CompoundStory";
 
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_UK = "UK_breaking_news";
@@ -295,7 +298,7 @@ public class InternalComponentsMapperTest {
         internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
     }
 
-    @Test(expected = MethodeArticleMarkedDeletedException.class)
+    @Test(expected = MethodeMarkedDeletedException.class)
     public void thatArticleMarkedAsDeletedThrowsException() throws Exception {
         when(methodeArticleValidator.getPublishingStatus(any(), any(), anyBoolean()))
                 .thenReturn(PublishingStatus.DELETED);
@@ -614,6 +617,7 @@ public class InternalComponentsMapperTest {
 
     @Test
     public void testBlocksIsSet() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_SET);
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
         Map<String, Object> templateValues = new HashMap<>();
         templateValues.put("blocks", Boolean.TRUE);
@@ -635,6 +639,7 @@ public class InternalComponentsMapperTest {
 
     @Test
     public void testBlocksKeyIsEmptyValueIsSet() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_EMPTY);
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
         Map<String, Object> templateValues = new HashMap<>();
         templateValues.put("blocks", Boolean.TRUE);
@@ -655,13 +660,13 @@ public class InternalComponentsMapperTest {
     }
 
     @Test(expected = InvalidMethodeContentException.class)
-    public void testBlocksKeyIsSetValueIsEmpty() {
+    public void testBlocksThrowsExceptionIfKeyIsSetAndValueIsEmpty() {
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_EMPTY);
         internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
     }
 
-     @Test(expected = InvalidMethodeContentException.class)
-    public void testBlocksIsEmpty() {
+    @Test(expected = InvalidMethodeContentException.class)
+    public void testBlocksThrowsExceptionIfBlocksIsEmpty() {
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_EMPTY);
         when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_EMPTY);
         internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);

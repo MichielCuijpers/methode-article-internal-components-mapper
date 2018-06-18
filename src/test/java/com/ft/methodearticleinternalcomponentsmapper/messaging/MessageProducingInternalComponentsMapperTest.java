@@ -2,7 +2,7 @@ package com.ft.methodearticleinternalcomponentsmapper.messaging;
 
 import com.ft.messagequeueproducer.MessageProducer;
 import com.ft.messaging.standards.message.v1.Message;
-import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleMarkedDeletedException;
+import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMarkedDeletedException;
 import com.ft.methodearticleinternalcomponentsmapper.model.EomFile;
 import com.ft.methodearticleinternalcomponentsmapper.model.InternalComponents;
 import com.ft.methodearticleinternalcomponentsmapper.transformation.InternalComponentsMapper;
@@ -77,7 +77,7 @@ public class MessageProducingInternalComponentsMapperTest {
         String uuid = UUID.randomUUID().toString();
         Message deletedContentMsg = mock(Message.class);
         String contentType = "DynamicContent";
-        MethodeArticleMarkedDeletedException mockException = mock(MethodeArticleMarkedDeletedException.class);
+        MethodeMarkedDeletedException mockException = mock(MethodeMarkedDeletedException.class);
         when(mockException.getType()).thenReturn(contentType);
 
         when(mapper.map(any(), anyString(), any(), eq(false))).thenThrow(mockException);

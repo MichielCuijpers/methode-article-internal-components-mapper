@@ -1,6 +1,7 @@
 package com.ft.methodearticleinternalcomponentsmapper.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,6 +21,7 @@ public class InternalComponents {
     private final AlternativeTitles alternativeTitles;
     private final AlternativeStandfirsts alternativeStandfirsts;
     private final String pushNotificationsCohort;
+    @JsonIgnore
     private final String type;
 
     private final String uuid;
