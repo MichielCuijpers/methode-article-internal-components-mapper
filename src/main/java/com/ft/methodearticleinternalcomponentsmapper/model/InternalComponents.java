@@ -119,6 +119,7 @@ public class InternalComponents {
     public List<Block> getBlocks() {
         return blocks;}
 
+    @JsonIgnore
     public String getType() {
         return type;}
 
