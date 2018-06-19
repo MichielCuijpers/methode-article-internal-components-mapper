@@ -9,6 +9,7 @@ import com.ft.methodearticleinternalcomponentsmapper.exception.TransformationExc
 import com.ft.methodearticleinternalcomponentsmapper.model.AlternativeStandfirsts;
 import com.ft.methodearticleinternalcomponentsmapper.model.AlternativeTitles;
 import com.ft.methodearticleinternalcomponentsmapper.model.Block;
+import com.ft.methodearticleinternalcomponentsmapper.model.Content;
 import com.ft.methodearticleinternalcomponentsmapper.model.Design;
 import com.ft.methodearticleinternalcomponentsmapper.model.EomFile;
 import com.ft.methodearticleinternalcomponentsmapper.model.Image;
@@ -186,6 +187,10 @@ public class InternalComponentsMapper {
                 if (isWordpressBlogContentPlaceholder(eomFile, xpath)) {
                     return internalComponentsBuilder.withUuid(resolvePlaceholderUuid(eomFile, transactionId, uuid, xpath)).build();
                 }
+                return internalComponentsBuilder.build();
+            }
+
+            if(SourceCode.DynamicContent.equals(sourceCode)) {
                 return internalComponentsBuilder.build();
             }
 
