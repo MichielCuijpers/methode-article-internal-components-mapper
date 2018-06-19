@@ -22,7 +22,6 @@ public class InternalComponents {
     private final AlternativeStandfirsts alternativeStandfirsts;
     private final String pushNotificationsCohort;
     private final String pushNotificationsText;
-    @JsonIgnore
     private final String type;
 
     private final String uuid;
