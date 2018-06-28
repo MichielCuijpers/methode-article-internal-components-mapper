@@ -241,7 +241,7 @@ public class InternalComponentsMapper {
         String sourceCode = xpath.evaluate(SOURCE_ATTR_XPATH, attributesDocument);
         final String type = determineType(xpath, attributesDocument, sourceCode);
 
-        final String transformedBody = transformField(sourceBodyXML, bodyTransformer, transactionId, Maps.immutableEntry("uuid", uuid.toString()));
+        final String transformedBody = transformField(sourceBodyXML, bodyTransformer, transactionId, Maps.immutableEntry("uuid", uuid.toString()), Maps.immutableEntry("apiHost", apiHost));
         final String validatedTransformedBody = validateBody(mode, type, transformedBody, uuid);
         final String postProcessedTransformedBody = putMainImageReferenceInBodyXml(xpath, attributesDocument, generateMainImageUuid(xpath, valueDocument), validatedTransformedBody);
 
