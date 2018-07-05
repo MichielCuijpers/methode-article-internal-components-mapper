@@ -28,11 +28,14 @@ public class StructuredMethodeSourcedBodyXMLEventHandlerRegistryInnerTable exten
         this.registerStartAndEndElementEventHandlerWrapper(new StripElementAndContentsXMLEventHandler(), "videoPlayer", "web-pull-quote", "plainHtml", "web-background-news", "promo-box");
 
         this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("colspan", "rowspan"),
-                "th", "td");
+                "td");
 
         this.registerStartAndEndElementEventHandlerWrapper(new RetainWithoutAttributesXMLEventHandler(),
                 "thead", "tbody",
                 "tfoot", "caption", "tr");
+
+        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("data-coloumn-name", "data-column-type", "data-column-sortable", "data-column-default-sort", "data-column-hidden", "data-column-width", "data-column-filter-type", "colspan", "rowspan"),
+				"th");
 
         this.registerStartAndEndElementEventHandlerWrapper(new StripXMLEventHandler(), "table");
     }
