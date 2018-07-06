@@ -27,7 +27,7 @@ public class DataTableXMLEventHandler extends BaseXMLEventHandler {
 	private static final String DATA_TABLE_HTML_ELEMENT_NAME = "table";
     private static final String P_TAG = "p";
     private static final String TABLE_ID = "id";
-    private static final String DATA_TABLE_NAME_ATTRIBUTE = "data-table-name";
+    private static final String DATA_TABLE_NAME_ATTRIBUTE = "data-name";
     private static final String DATA_TABLE_THEME_ATTRIBUTE = "data-table-theme";
     private static final String DATA_TABLE_COLLAPSE_ROWNUM_ATTRIBUTE = "data-table-collapse-rownum";
     private static final String DATA_TABLE_LAYOUT_SMALLSCREEN_ATTRIBUTE = "data-table-layout-smallscreen";
@@ -35,6 +35,7 @@ public class DataTableXMLEventHandler extends BaseXMLEventHandler {
 
 	private XmlParser<DataTableData> dataTableDataXmlParser;
 	private StripElementAndContentsXMLEventHandler stripElementAndContentsXMLEventHandler;
+	private List<String> attributesList;
 
 	public DataTableXMLEventHandler(XmlParser<DataTableData> dataTableDataXmlParser,
 									StripElementAndContentsXMLEventHandler stripElementAndContentsXMLEventHandler){
@@ -43,6 +44,7 @@ public class DataTableXMLEventHandler extends BaseXMLEventHandler {
 
 		this.dataTableDataXmlParser = dataTableDataXmlParser;
 		this.stripElementAndContentsXMLEventHandler = stripElementAndContentsXMLEventHandler;
+		this.attributesList = createAttributesList();
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class DataTableXMLEventHandler extends BaseXMLEventHandler {
 	}
 
     private void writeDataTable(BodyWriter eventWriter, DataTableData dataBean, StartElement startElement) {
-        eventWriter.writeStartTag(DATA_TABLE_HTML_ELEMENT_NAME, dataColumnAttributes(startElement));
+        eventWriter.writeStartTag(DATA_TABLE_HTML_ELEMENT_NAME, dataTableAttributes(startElement));
         eventWriter.writeRaw(dataBean.getBody());
         eventWriter.writeEndTag(DATA_TABLE_HTML_ELEMENT_NAME);
     }
@@ -87,29 +89,26 @@ public class DataTableXMLEventHandler extends BaseXMLEventHandler {
 		return false;
 	}
 
-	private List<String> createAttributesList() {
-		List<String> attributesList = new ArrayList<>();
-		attributesList.add(0, TABLE_ID);
-		attributesList.add(1, DATA_TABLE_NAME_ATTRIBUTE);
-		attributesList.add(2, DATA_TABLE_THEME_ATTRIBUTE);
-		attributesList.add(3, DATA_TABLE_COLLAPSE_ROWNUM_ATTRIBUTE);
-		attributesList.add(4, DATA_TABLE_LAYOUT_SMALLSCREEN_ATTRIBUTE);
-		attributesList.add(5, DATA_TABLE_LAYOUT_LARGESCREEN_ATTRIBUTE);
-		return attributesList;
-	}
+    private List<String> createAttributesList() {
+        attributesList = new ArrayList<>();
+        attributesList.add(DATA_TABLE_ATTRIBUTE_NAME);
+        attributesList.add(TABLE_ID);
+        attributesList.add(DATA_TABLE_NAME_ATTRIBUTE);
+        attributesList.add(DATA_TABLE_THEME_ATTRIBUTE);
+        attributesList.add(DATA_TABLE_COLLAPSE_ROWNUM_ATTRIBUTE);
+        attributesList.add(DATA_TABLE_LAYOUT_SMALLSCREEN_ATTRIBUTE);
+        attributesList.add(DATA_TABLE_LAYOUT_LARGESCREEN_ATTRIBUTE);
+        return attributesList;
+    }
 
-	private Map<String, String> dataColumnAttributes(StartElement startElement) {
-		Map<String, String> attributesMap = new HashMap<>();
-		List<String> attributesList = createAttributesList();
+    private Map<String, String> dataTableAttributes(StartElement startElement) {
+        Map<String, String> attributesMap = new HashMap<>();
 
-		attributesMap.put(DATA_TABLE_ATTRIBUTE_NAME, DATA_TABLE_ATTRIBUTE_VALUE);
-
-		for (Iterator i = startElement.getAttributes(); i.hasNext();) {
-				Attribute attribute = (Attribute) i.next();
-				if (attributesList.contains(attribute.getName().toString()))
-					attributesMap.put(attribute.getName().toString(), attribute.getValue());
-			}
-
-		return attributesMap;
-	}
+        for (Iterator i = startElement.getAttributes(); i.hasNext(); ) {
+            Attribute attribute = (Attribute) i.next();
+            if (attributesList.contains(attribute.getName().toString()))
+                attributesMap.put(attribute.getName().toString(), attribute.getValue());
+        }
+        return attributesMap;
+    }
 }
