@@ -27,12 +27,24 @@ public class StructuredMethodeSourcedBodyXMLEventHandlerRegistryInnerTable exten
 
         this.registerStartAndEndElementEventHandlerWrapper(new StripElementAndContentsXMLEventHandler(), "videoPlayer", "web-pull-quote", "plainHtml", "web-background-news", "promo-box");
 
-        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("colspan", "rowspan"),
-                "th", "td");
+        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("colspan", "rowspan", "id", "headers", "data-name"),
+                "td");
+
+        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("id", "data-name"),
+				"tr");
+
+        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("colspan", "rowspan", "id", "headers", "scope", "data-name", "data-column-type", "data-column-sortable", "data-column-default-sort", "data-column-hidden", "data-column-width", "data-column-filter-type"),
+				"th");
+
+        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("data-heading-level"),
+				"caption");
+
+        this.registerStartAndEndElementEventHandlerWrapper(new RetainWithSpecificAttributesXMLEventHandler("span", "data-name", "data-column-type", "data-column-sortable", "data-column-default-sort", "data-column-hidden", "data-column-width"),
+				"col", "colgroup");
 
         this.registerStartAndEndElementEventHandlerWrapper(new RetainWithoutAttributesXMLEventHandler(),
                 "thead", "tbody",
-                "tfoot", "caption", "tr");
+                "tfoot");
 
         this.registerStartAndEndElementEventHandlerWrapper(new StripXMLEventHandler(), "table");
     }

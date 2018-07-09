@@ -689,7 +689,7 @@ public class BodyProcessingFieldTransformerFactoryTest {
                 "</table>\n" +
                 "</div></body>";
 
-        String processedDataTable = "<body><table class=\"data-table\">" +
+        String processedDataTable = "<body><table class=\"data-table\" id=\"U1817116616509jH\">" +
                 "<caption>KarCrash Q1  02/2014- period from to 09/2014\n" +
                 "</caption>\n" +
                 "<tr><th>Sales</th>\n" +
@@ -738,7 +738,7 @@ public class BodyProcessingFieldTransformerFactoryTest {
                 "</body>";
 
         String processedDataTable = "<body><p>The following data table</p>" +
-                "<table class=\"data-table\">" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\">" +
                 "<caption>KarCrash Q1  02/2014- period from to 09/2014\n" +
                 "</caption>\n" +
                 "<tr><th>Sales</th>\n" +
@@ -789,6 +789,511 @@ public class BodyProcessingFieldTransformerFactoryTest {
         String processedTable = "<body>\n</body>";
 
         checkTransformation(tableFromMethode, processedTable);
+    }
+
+    @Test
+    public void shouldRetainAllValidAttributesForTableTag() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" data-name=\"\"" +
+                " data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption id=\"k63G\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<caption>KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainOnlyValidAttributesForTableTag() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" width=\"100%\" align=\"right\" data-name=\"\"" +
+                " data-table-theme=\"auto\" border=\"1\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption id=\"k63G\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<caption>KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainAllValidAttributesForThTag() {
+        String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" border=\"\" cellspacing=\"\" cellpadding=\"\" " +
+                "id=\"U1817116616509jH\" width=\"100%\"><caption id=\"k63G\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th id=\"name\" headers=\"name\" scope=\"col\" data-name=\"\" data-column-type=\"string\"\n " +
+				"colspan=\"2\" rowspan=\"2\" " +
+				"    data-column-sortable=\"false\"\n" +
+				"    data-column-default-sort=\"none\"" +
+				"    data-column-hidden=\"none\"\n" +
+				"    data-column-width=\"70%\"\n" +
+				"    data-column-filter-type=\"none\">Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\">" +
+                "<caption>KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th id=\"name\" headers=\"name\" scope=\"col\" data-name=\"\" data-column-type=\"string\"\n " +
+				"colspan=\"2\" rowspan=\"2\" " +
+				"    data-column-sortable=\"false\"\n" +
+				"    data-column-default-sort=\"none\"" +
+				"    data-column-hidden=\"none\"\n" +
+				"    data-column-width=\"70%\"\n" +
+				"    data-column-filter-type=\"none\">Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainOnlyValidAttributesForThTag() {
+        String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" border=\"\" cellspacing=\"\" cellpadding=\"\" " +
+                "id=\"U1817116616509jH\" width=\"100%\"><caption id=\"k63G\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th id=\"name\" headers=\"name\" scope=\"col\" data-name=\"\" data-column-type=\"string\"\n " +
+				"colspan=\"2\" rowspan=\"2\" align=\"right\" height=\"100\"" +
+				"    data-column-sortable=\"false\"\n" +
+				"    data-column-default-sort=\"none\"" +
+				"    data-column-hidden=\"none\"\n" +
+				"    data-column-width=\"70%\"\n" +
+				"    data-column-filter-type=\"none\">Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\">" +
+                "<caption>KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th id=\"name\" headers=\"name\" scope=\"col\" data-name=\"\" data-column-type=\"string\"\n " +
+				"colspan=\"2\" rowspan=\"2\" " +
+				"    data-column-sortable=\"false\"\n" +
+				"    data-column-default-sort=\"none\"" +
+				"    data-column-hidden=\"none\"\n" +
+				"    data-column-width=\"70%\"\n" +
+				"    data-column-filter-type=\"none\">Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainAllValidAttributesForTdTag() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" width=\"100%\" align=\"right\" data-name=\"\"" +
+                " data-table-theme=\"auto\" border=\"1\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption id=\"k63G\" data-heading-level=\"auto\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td colspan=\"2\" rowspan=\"2\" id=\"name\" headers=\"name\" data-name=\"\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<caption data-heading-level=\"auto\">KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td colspan=\"2\" rowspan=\"2\" id=\"name\" headers=\"name\" data-name=\"\">€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainOnlyValidAttributesForTdTag() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" width=\"100%\" align=\"right\" data-name=\"\"" +
+                " data-table-theme=\"auto\" border=\"1\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption id=\"k63G\" data-heading-level=\"auto\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td colspan=\"2\" rowspan=\"2\" id=\"name\" headers=\"name\" data-name=\"\" align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<caption data-heading-level=\"auto\">KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td colspan=\"2\" rowspan=\"2\" id=\"name\" headers=\"name\" data-name=\"\">€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainOnlyValidAttributesForTrTag() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" width=\"100%\" align=\"right\" data-name=\"\"" +
+                " data-table-theme=\"auto\" border=\"1\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption id=\"k63G\" data-heading-level=\"auto\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+                "<tr id=\"k365\" data-name=\"\"><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td colspan=\"2\" rowspan=\"2\" id=\"name\" headers=\"name\" data-name=\"\" align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<caption data-heading-level=\"auto\">KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+                "<tr id=\"k365\" data-name=\"\"><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td colspan=\"2\" rowspan=\"2\" id=\"name\" headers=\"name\" data-name=\"\">€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldRetainAttributesForCaptionColColgroupTags() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" width=\"100%\" align=\"right\" data-name=\"\"" +
+                " data-table-theme=\"auto\" border=\"1\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption id=\"k63G\" data-heading-level=\"auto\"><span id=\"U181711661650mIC\">KarCrash Q1  02/2014- period from to 09/2014</span>\n" +
+                "</caption>\n" +
+				"<colgroup span=\"2\" data-name=\"\" data-column-type=\"string\" data-column-sortable=\"false\" data-column-default-sort=\"none\" " +
+				"data-column-hidden=\"none\" data-column-width=\"100%\">\n" +
+				"<col span=\"2\" data-name=\"\" data-column-type=\"string\" data-column-sortable=\"false\" data-column-default-sort=\"none\" " +
+				"data-column-hidden=\"none\" data-column-width=\"100%\"></col>\n" +
+				"</colgroup>" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<caption data-heading-level=\"auto\">KarCrash Q1  02/2014- period from to 09/2014\n" +
+                "</caption>\n" +
+				"<colgroup span=\"2\" data-name=\"\" data-column-type=\"string\" data-column-sortable=\"false\" data-column-default-sort=\"none\" " +
+				"data-column-hidden=\"none\" data-column-width=\"100%\">\n" +
+				"<col span=\"2\" data-name=\"\" data-column-type=\"string\" data-column-sortable=\"false\" data-column-default-sort=\"none\" " +
+				"data-column-hidden=\"none\" data-column-width=\"100%\"></col>\n" +
+				"</colgroup>" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
+    }
+
+    @Test
+    public void shouldStripEmptyCaptionTag() {
+    	String dataTableFromMethode = "<body><p>The following data table" +
+                "<div><table class=\"data-table\" id=\"U1817116616509jH\" width=\"100%\" align=\"right\" data-name=\"\"" +
+                " data-table-theme=\"auto\" border=\"1\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+				"<caption>" +
+                "</caption>" +
+                "<tr><th width=\"25%\">Sales</th>\n" +
+                "<th width=\"25%\">Net profit</th>\n" +
+                "<th width=\"25%\">Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">€</td>\n" +
+                "</tr>\n" +
+                "<tr><td align=\"center\" width=\"25%\" valign=\"middle\">324↑ ↓324</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">453↑ ↓435</td>\n" +
+                "<td align=\"center\" width=\"25%\" valign=\"middle\">123↑ ↓989</td>\n" +
+                "<td width=\"25%\" align=\"center\" valign=\"middle\">748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "</div> shows some data</p>" +
+                "</body>";
+
+        String processedDataTable = "<body><p>The following data table</p>" +
+                "<table class=\"data-table\" id=\"U1817116616509jH\"" +
+				" data-name=\"\" data-table-theme=\"auto\" data-table-collapse-rownum=\"\" data-table-layout-smallscreen=\"horizontal-scroll\" data-table-layout-largescreen=\"auto\">" +
+                "<tr><th>Sales</th>\n" +
+                "<th>Net profit</th>\n" +
+                "<th>Earnings per share</th>\n" +
+                "<th data-column-width=\"70%\"\n>Dividend</th>\n" +
+                "</tr>\n" +
+                "<tr><td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "<td>€</td>\n" +
+                "</tr>\n" +
+                "<tr><td>324↑ ↓324</td>\n" +
+                "<td>453↑ ↓435</td>\n" +
+                "<td>123↑ ↓989</td>\n" +
+                "<td>748↑ ↓986</td>\n" +
+                "</tr>\n" +
+                "</table>" +
+                "<p> shows some data</p>" +
+                "</body>";
+
+        checkTransformation(dataTableFromMethode, processedDataTable);
     }
 
     @Test
