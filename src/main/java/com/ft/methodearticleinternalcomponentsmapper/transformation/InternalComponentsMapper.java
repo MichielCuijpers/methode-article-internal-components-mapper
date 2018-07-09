@@ -490,6 +490,7 @@ public class InternalComponentsMapper {
         if (Strings.isNullOrEmpty(pushNotificationsText)) {
             return null;
         }
+
         return pushNotificationsText;
     }
 }

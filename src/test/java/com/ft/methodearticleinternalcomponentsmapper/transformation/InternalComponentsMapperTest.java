@@ -621,12 +621,12 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testNotificationsTextIsNotExists() {
+    public void testNotificationsTextIsNull() {
         testPushNotificationsText(null, null);
     }
 
     @Test
-    public void testNotificationsTextIsNull() {
+    public void testNotificationsTextIsDummyText() {
         testPushNotificationsText(VALUE_PUSH_NOTIFICATIONS_IS_NULL, null);
     }
 
