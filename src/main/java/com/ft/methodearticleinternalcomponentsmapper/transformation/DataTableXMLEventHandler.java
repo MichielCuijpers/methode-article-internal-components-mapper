@@ -106,8 +106,9 @@ public class DataTableXMLEventHandler extends BaseXMLEventHandler {
 
         for (Iterator i = startElement.getAttributes(); i.hasNext(); ) {
             Attribute attribute = (Attribute) i.next();
-            if (attributesList.contains(attribute.getName().toString()))
+            if (attributesList.contains(attribute.getName().toString())) {
                 attributesMap.put(attribute.getName().toString(), attribute.getValue());
+            }
         }
         return attributesMap;
     }
