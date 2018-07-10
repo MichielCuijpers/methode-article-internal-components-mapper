@@ -57,6 +57,7 @@ public class InternalComponentsMapperTest {
     private static final String EXPECTED_PUSH_NOTIFICATIONS_COHORT_GLOBAL = "global-breaking-news";
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_NONE = "None";
     private static final String VALUE_PUSH_NOTIFICATIONS_TEXT = "My push notification text";
+    private static final String VALUE_PUSH_NOTIFICATIONS_IS_NULL = "<?EM-dummyText [Push notification text]?>";
 
     private static final String PLACEHOLDER_PUSH_NOTIFICATIONS_COHORT = "pushNotificationsCohort";
     private static final String PLACEHOLDER_PUSH_NOTIFICATIONS_TEXT = "push-notification-text";
@@ -623,6 +624,12 @@ public class InternalComponentsMapperTest {
     public void testNotificationsTextIsNull() {
         testPushNotificationsText(null, null);
     }
+
+    @Test
+    public void testNotificationsTextIsDummyText() {
+        testPushNotificationsText(VALUE_PUSH_NOTIFICATIONS_IS_NULL, null);
+    }
+
 
     private void testPushNotificationsCohort(String attributePushNotificationsCohort, String expectedPushNotificationsCohort) {
         attributesPlaceholdersValues.put(PLACEHOLDER_PUSH_NOTIFICATIONS_COHORT, attributePushNotificationsCohort);

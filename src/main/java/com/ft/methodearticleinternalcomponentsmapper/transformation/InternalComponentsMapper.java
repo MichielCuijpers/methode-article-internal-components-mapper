@@ -486,7 +486,7 @@ public class InternalComponentsMapper {
     }
 
     private String extractPushNotificationsText(XPath xPath, Document valueDocument) throws XPathExpressionException {
-        String pushNotificationsText = Strings.nullToEmpty(xPath.evaluate(XPATH_PUSH_NOTIFICATION_TEXT, valueDocument));
+        String pushNotificationsText = Strings.nullToEmpty(xPath.evaluate(XPATH_PUSH_NOTIFICATION_TEXT, valueDocument)).trim();
         if (Strings.isNullOrEmpty(pushNotificationsText)) {
             return null;
         }
