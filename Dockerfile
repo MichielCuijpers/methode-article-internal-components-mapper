@@ -1,14 +1,14 @@
-FROM coco/dropwizardbase:0.7.x-mvn333
+FROM openjdk:8-alpine
 
 COPY . /
 
-RUN apk --update add git \
+RUN apk --update add git maven \
  && HASH=$(git log -1 --pretty=format:%H) \
  && mvn install -Dbuild.git.revision=$HASH -Djava.net.preferIPv4Stack=true \
  && rm -f target/methode-article-internal-components-mapper-*sources.jar \
  && mv target/methode-article-internal-components-mapper-*.jar /methode-article-internal-components-mapper.jar \
  && mv methode-article-internal-components-mapper.yaml /config.yaml \
- && apk del git \
+ && apk del git maven \
  && rm -rf /var/cache/apk/* \
  && rm -rf /root/.m2/*
 
