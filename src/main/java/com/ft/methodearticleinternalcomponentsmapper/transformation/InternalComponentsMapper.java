@@ -141,7 +141,7 @@ public class InternalComponentsMapper {
 
             final String type = determineType(xpath, attributesDocument, sourceCode);
 
-            Boolean previewParam = SourceCode.FT.equals(sourceCode) ? preview : null;
+            Boolean previewParam = SourceCode.FT.equals(sourceCode) || SourceCode.DynamicContent.equals(sourceCode) ? preview : null;
             PublishingStatus status = articleValidators.get(sourceCode).getPublishingStatus(eomFile, transactionId, previewParam);
             switch (status) {
                 case INELIGIBLE:

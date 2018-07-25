@@ -121,7 +121,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatContentPlaceholderUuidWithMissingCategoryDoesntGetResolved() throws Exception {
+    public void thatContentPlaceholderUuidWithMissingCategoryDoesntGetResolved() {
         String serviceId = "http://ftalphaville.ft.com/?p=2193913";
         String ref_field = "2193913";
 
@@ -138,7 +138,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatContentPlaceholderUuidWithNonBlogCategoryDoesntGetResolved() throws Exception {
+    public void thatContentPlaceholderUuidWithNonBlogCategoryDoesntGetResolved() {
         String serviceId = "http://ftalphaville.ft.com/?p=2193913";
         String ref_field = "2193913";
         String category = "notblog";
@@ -157,27 +157,27 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatBlogContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatBlogContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("blog");
     }
 
     @Test
-    public void thatWebchatLiveBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatWebchatLiveBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("webchat-live-blogs");
     }
 
     @Test
-    public void thatWebchatLiveQaBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatWebchatLiveQaBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("webchat-live-qa");
     }
 
     @Test
-    public void thatWebchatMarketsLiveQaBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatWebchatMarketsLiveQaBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("webchat-markets-live");
     }
 
     @Test
-    public void thatFastftBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatFastftBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("fastft");
     }
 
@@ -285,8 +285,27 @@ public class InternalComponentsMapperTest {
         assertNull(content.getBodyXML());
     }
 
+    @Test
+    public void testMapsDynamicContent() {
+        Map<String, Object> attributesTemplateValues = new HashMap<>();
+        attributesTemplateValues.put("sourceCode", "DynamicContent");
+        attributesTemplateValues.put("workflowStatus", "Stories/WebReady");
+
+        Map<String, Object> valueTemplateValues = new HashMap<>();
+        eomFile = createDynamicContent(valueTemplateValues, attributesTemplateValues);
+
+        internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, true);
+    }
+
+    @Test
+    public void testMapsFTContent() {
+        eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
+
+        internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, true);
+    }
+
     @Test(expected = MethodeArticleNotEligibleForPublishException.class)
-    public void thatExceptionIsThrownWhenSourceCodeNotFTOrContentPlaceholder() throws Exception {
+    public void thatExceptionIsThrownWhenSourceCodeNotFTOrContentPlaceholder() {
         attributesPlaceholdersValues.put("sourceCode", "THIS_IS_NOT_A_GOOD_SOURCE_CODE");
         eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
 
@@ -294,7 +313,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test(expected = MethodeArticleNotEligibleForPublishException.class)
-    public void thatArticleIneligibleForPublishThrowsException() throws Exception {
+    public void thatArticleIneligibleForPublishThrowsException() {
         when(methodeArticleValidator.getPublishingStatus(any(), any(), anyBoolean()))
                 .thenReturn(PublishingStatus.INELIGIBLE);
 
@@ -302,7 +321,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test(expected = MethodeMarkedDeletedException.class)
-    public void thatArticleMarkedAsDeletedThrowsException() throws Exception {
+    public void thatArticleMarkedAsDeletedThrowsException() {
         when(methodeArticleValidator.getPublishingStatus(any(), any(), anyBoolean()))
                 .thenReturn(PublishingStatus.DELETED);
 
@@ -429,7 +448,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatValidArticleWithTopperIsMappedCorrectly() throws Exception {
+    public void thatValidArticleWithTopperIsMappedCorrectly() {
         String backgroundColour = "fooBackground";
         String layout = "barColor";
         String headline = "foobar headline";
@@ -455,7 +474,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatValidArticleWithTopperButEmptyStandfirstAndHeadlineIsMappedCorrectly() throws Exception {
+    public void thatValidArticleWithTopperButEmptyStandfirstAndHeadlineIsMappedCorrectly() {
         String backgroundColour = "fooBackground";
         String layout = "barColor";
 
@@ -495,7 +514,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testNullContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testNullContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -509,7 +528,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testEmptyContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testEmptyContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -523,7 +542,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testBlankContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testBlankContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -537,7 +556,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testDummyContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testDummyContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -551,7 +570,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testUnformattedContentPackageNextIsTrimmed() throws Exception {
+    public void testUnformattedContentPackageNextIsTrimmed() {
         final String unformattedContentPackageNext = " This is a unformatted description of the upcoming content ";
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
@@ -566,7 +585,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testFormattedContentPackageNextIsPreserved() throws Exception {
+    public void testFormattedContentPackageNextIsPreserved() {
         final String formattedContentPackageNext = "<p>This is a unformatted <em>description</em> of the upcoming content</p>";
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
