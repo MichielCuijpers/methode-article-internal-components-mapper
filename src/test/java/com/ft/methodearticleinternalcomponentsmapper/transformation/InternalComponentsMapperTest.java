@@ -2,7 +2,8 @@ package com.ft.methodearticleinternalcomponentsmapper.transformation;
 
 import com.ft.bodyprocessing.html.Html5SelfClosingTagBodyProcessor;
 import com.ft.common.FileUtils;
-import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleMarkedDeletedException;
+import com.ft.methodearticleinternalcomponentsmapper.exception.InvalidMethodeContentException;
+import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMarkedDeletedException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleNotEligibleForPublishException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMissingFieldException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.UuidResolverException;
@@ -12,8 +13,10 @@ import com.ft.methodearticleinternalcomponentsmapper.model.Image;
 import com.ft.methodearticleinternalcomponentsmapper.model.InternalComponents;
 import com.ft.methodearticleinternalcomponentsmapper.validation.MethodeArticleValidator;
 import com.ft.methodearticleinternalcomponentsmapper.validation.PublishingStatus;
+
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +52,10 @@ public class InternalComponentsMapperTest {
     private static final String ARTICLE_WITH_ALL_COMPONENTS = FileUtils.readFile("article/article_with_all_components.xml.mustache");
 
     private static final String TRANSFORMED_BODY = "<body><p>some other random text</p></body>";
+    private static final String BLOCKS_VALUE_IS_SET = "<body>x-value</body>";
+    private static final String BLOCKS_VALUE_IS_EMPTY = "<body></body>";
+    private static final String BLOCKS_KEY_IS_EMPTY = "";
+    private static final String BLOCKS_KEY_IS_SET = "x";
     private static final String EOM_TYPE_COMPOUND_STORY = "EOM::CompoundStory";
 
     private static final String ATTRIBUTE_PUSH_NOTIFICATIONS_COHORT_UK = "UK_breaking_news";
@@ -108,12 +115,13 @@ public class InternalComponentsMapperTest {
         Map<String, MethodeArticleValidator> articleValidators = new HashMap<>();
         articleValidators.put(InternalComponentsMapper.SourceCode.FT, methodeArticleValidator);
         articleValidators.put(InternalComponentsMapper.SourceCode.CONTENT_PLACEHOLDER, methodeContentPlaceholderValidator);
+        articleValidators.put(InternalComponentsMapper.SourceCode.DYNAMIC_CONTENT, methodeArticleValidator);
 
         internalComponentsMapper = new InternalComponentsMapper(bodyTransformer, htmlFieldProcessor, blogUuidResolver, articleValidators, API_HOST);
     }
 
     @Test
-    public void thatContentPlaceholderUuidWithMissingCategoryDoesntGetResolved() throws Exception {
+    public void thatContentPlaceholderUuidWithMissingCategoryDoesntGetResolved() {
         String serviceId = "http://ftalphaville.ft.com/?p=2193913";
         String ref_field = "2193913";
 
@@ -130,7 +138,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatContentPlaceholderUuidWithNonBlogCategoryDoesntGetResolved() throws Exception {
+    public void thatContentPlaceholderUuidWithNonBlogCategoryDoesntGetResolved() {
         String serviceId = "http://ftalphaville.ft.com/?p=2193913";
         String ref_field = "2193913";
         String category = "notblog";
@@ -149,27 +157,27 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatBlogContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatBlogContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("blog");
     }
 
     @Test
-    public void thatWebchatLiveBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatWebchatLiveBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("webchat-live-blogs");
     }
 
     @Test
-    public void thatWebchatLiveQaBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatWebchatLiveQaBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("webchat-live-qa");
     }
 
     @Test
-    public void thatWebchatMarketsLiveQaBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatWebchatMarketsLiveQaBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("webchat-markets-live");
     }
 
     @Test
-    public void thatFastftBlogsContentPlaceholderUuidIsResolved() throws Exception {
+    public void thatFastftBlogsContentPlaceholderUuidIsResolved() {
         contentPlaceholderWithBlogCategory("fastft");
     }
 
@@ -277,8 +285,27 @@ public class InternalComponentsMapperTest {
         assertNull(content.getBodyXML());
     }
 
+    @Test
+    public void testMapsDynamicContent() {
+        Map<String, Object> attributesTemplateValues = new HashMap<>();
+        attributesTemplateValues.put("sourceCode", "DynamicContent");
+        attributesTemplateValues.put("workflowStatus", "Stories/WebReady");
+
+        Map<String, Object> valueTemplateValues = new HashMap<>();
+        eomFile = createDynamicContent(valueTemplateValues, attributesTemplateValues);
+
+        internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, true);
+    }
+
+    @Test
+    public void testMapsFTContent() {
+        eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
+
+        internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, true);
+    }
+
     @Test(expected = MethodeArticleNotEligibleForPublishException.class)
-    public void thatExceptionIsThrownWhenSourceCodeNotFTOrContentPlaceholder() throws Exception {
+    public void thatExceptionIsThrownWhenSourceCodeNotFTOrContentPlaceholder() {
         attributesPlaceholdersValues.put("sourceCode", "THIS_IS_NOT_A_GOOD_SOURCE_CODE");
         eomFile = createEomFile(valuePlaceholdersValues, attributesPlaceholdersValues);
 
@@ -286,15 +313,15 @@ public class InternalComponentsMapperTest {
     }
 
     @Test(expected = MethodeArticleNotEligibleForPublishException.class)
-    public void thatArticleIneligibleForPublishThrowsException() throws Exception {
+    public void thatArticleIneligibleForPublishThrowsException() {
         when(methodeArticleValidator.getPublishingStatus(any(), any(), anyBoolean()))
                 .thenReturn(PublishingStatus.INELIGIBLE);
 
         internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
     }
 
-    @Test(expected = MethodeArticleMarkedDeletedException.class)
-    public void thatArticleMarkedAsDeletedThrowsException() throws Exception {
+    @Test(expected = MethodeMarkedDeletedException.class)
+    public void thatArticleMarkedAsDeletedThrowsException() {
         when(methodeArticleValidator.getPublishingStatus(any(), any(), anyBoolean()))
                 .thenReturn(PublishingStatus.DELETED);
 
@@ -421,7 +448,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatValidArticleWithTopperIsMappedCorrectly() throws Exception {
+    public void thatValidArticleWithTopperIsMappedCorrectly() {
         String backgroundColour = "fooBackground";
         String layout = "barColor";
         String headline = "foobar headline";
@@ -447,7 +474,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void thatValidArticleWithTopperButEmptyStandfirstAndHeadlineIsMappedCorrectly() throws Exception {
+    public void thatValidArticleWithTopperButEmptyStandfirstAndHeadlineIsMappedCorrectly() {
         String backgroundColour = "fooBackground";
         String layout = "barColor";
 
@@ -487,7 +514,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testNullContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testNullContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -501,7 +528,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testEmptyContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testEmptyContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -515,7 +542,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testBlankContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testBlankContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -529,7 +556,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testDummyContentPackageNextIsNullUpcomingDesc() throws Exception {
+    public void testDummyContentPackageNextIsNullUpcomingDesc() {
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
         valuePlaceholdersValues.put("tableOfContentsSequence", "");
@@ -543,7 +570,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testUnformattedContentPackageNextIsTrimmed() throws Exception {
+    public void testUnformattedContentPackageNextIsTrimmed() {
         final String unformattedContentPackageNext = " This is a unformatted description of the upcoming content ";
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
@@ -558,7 +585,7 @@ public class InternalComponentsMapperTest {
     }
 
     @Test
-    public void testFormattedContentPackageNextIsPreserved() throws Exception {
+    public void testFormattedContentPackageNextIsPreserved() {
         final String formattedContentPackageNext = "<p>This is a unformatted <em>description</em> of the upcoming content</p>";
         valuePlaceholdersValues.put("contentPackage", true);
         valuePlaceholdersValues.put("oldDesignTheme", "");
@@ -630,6 +657,62 @@ public class InternalComponentsMapperTest {
         testPushNotificationsText(VALUE_PUSH_NOTIFICATIONS_IS_NULL, null);
     }
 
+    @Test
+    public void testBlocksIsSet() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_SET);
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
+        Map<String, Object> templateValues = new HashMap<>();
+        templateValues.put("blocks", Boolean.TRUE);
+        templateValues.put("block-1", Boolean.TRUE);
+        templateValues.put("block-name-1", "x");
+        templateValues.put("block-html-value-1", "x-value");
+
+        Map<String, Object> attributesTemplateValues = new HashMap<>();
+        attributesTemplateValues.put("sourceCode", "DynamicContent");
+
+        final EomFile eomFile = createDynamicContent(templateValues, attributesTemplateValues);
+        final InternalComponents internalComponents = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
+        assertThat(internalComponents.getBlocks(), notNullValue());
+        assertThat(internalComponents.getBlocks().size(), equalTo(1));
+        assertThat(internalComponents.getBlocks().get(0).getKey(), equalTo("x"));
+        assertThat(internalComponents.getBlocks().get(0).getValueXML(), equalTo("x-value"));
+        assertThat(internalComponents.getBlocks().get(0).getType(), equalTo("html-block"));
+    }
+
+    @Test
+    public void testBlocksKeyIsEmptyValueIsSet() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_EMPTY);
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_SET);
+        Map<String, Object> templateValues = new HashMap<>();
+        templateValues.put("blocks", Boolean.TRUE);
+        templateValues.put("block-1", Boolean.TRUE);
+        templateValues.put("block-name-1", "");
+        templateValues.put("block-html-value-1", "x-value");
+
+        Map<String, Object> attributesTemplateValues = new HashMap<>();
+        attributesTemplateValues.put("sourceCode", "DynamicContent");
+
+        final EomFile eomFile = createDynamicContent(templateValues, attributesTemplateValues);
+        final InternalComponents internalComponents = internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
+        assertThat(internalComponents.getBlocks(), notNullValue());
+        assertThat(internalComponents.getBlocks().size(), equalTo(1));
+        assertThat(internalComponents.getBlocks().get(0).getKey(), equalTo(""));
+        assertThat(internalComponents.getBlocks().get(0).getValueXML(), equalTo("x-value"));
+        assertThat(internalComponents.getBlocks().get(0).getType(), equalTo("html-block"));
+    }
+
+    @Test(expected = InvalidMethodeContentException.class)
+    public void testBlocksThrowsExceptionIfKeyIsSetAndValueIsEmpty() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_EMPTY);
+        internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
+    }
+
+    @Test(expected = InvalidMethodeContentException.class)
+    public void testBlocksThrowsExceptionIfBlocksIsEmpty() {
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_KEY_IS_EMPTY);
+        when(bodyTransformer.transform(anyString(), anyString(), anyVararg())).thenReturn(BLOCKS_VALUE_IS_EMPTY);
+        internalComponentsMapper.map(eomFile, TX_ID, LAST_MODIFIED, false);
+    }
 
     private void testPushNotificationsCohort(String attributePushNotificationsCohort, String expectedPushNotificationsCohort) {
         attributesPlaceholdersValues.put(PLACEHOLDER_PUSH_NOTIFICATIONS_COHORT, attributePushNotificationsCohort);
@@ -657,6 +740,19 @@ public class InternalComponentsMapperTest {
                 .withWebUrl(null)
                 .build();
     }
+
+    private EomFile createDynamicContent(Map<String, Object> templateValues,
+                                         Map<String, Object> attributesTemplateValues) {
+        return new EomFile.Builder()
+                .withUuid(ARTICLE_UUID)
+                .withType(EOM_TYPE_COMPOUND_STORY)
+                .withValue(buildEomFileValue(templateValues))
+                .withAttributes(buildEomFileAttributes(attributesTemplateValues))
+                .withWorkflowStatus("Stories/WebReady")
+                .withWebUrl(null)
+                .build();
+    }
+
     private static byte[] buildEomFileValue(Map<String, Object> valuePlaceholdersValues) {
         Template mustache = Mustache.compiler().escapeHTML(false).compile(ARTICLE_WITH_ALL_COMPONENTS);
         return mustache.execute(valuePlaceholdersValues).getBytes(UTF_8);

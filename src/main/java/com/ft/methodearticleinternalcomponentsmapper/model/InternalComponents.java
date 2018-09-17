@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 public class InternalComponents {
 
@@ -21,10 +22,10 @@ public class InternalComponents {
     private final AlternativeStandfirsts alternativeStandfirsts;
     private final String pushNotificationsCohort;
     private final String pushNotificationsText;
-
     private final String uuid;
     private final Date lastModified;
     private final String publishReference;
+    private final List<Block> blocks;
 
     public InternalComponents(@JsonProperty("design") final Design design,
                               @JsonProperty("tableOfContents") final TableOfContents tableOfContents,
@@ -39,7 +40,8 @@ public class InternalComponents {
                               @JsonProperty("pushNotificationsText") final String pushNotificationsText,
                               @JsonProperty("uuid") final String uuid,
                               @JsonProperty("lastModified") final Date lastModified,
-                              @JsonProperty("publishReference") final String publishReference) {
+                              @JsonProperty("publishReference") final String publishReference,
+                              @JsonProperty("blocks") List<Block> blocks) {
         this.design = design;
         this.tableOfContents = tableOfContents;
         this.topper = topper;
@@ -51,10 +53,10 @@ public class InternalComponents {
         this.alternativeStandfirsts = alternativeStandfirsts;
         this.pushNotificationsCohort = pushNotificationsCohort;
         this.pushNotificationsText = pushNotificationsText;
-
         this.uuid = uuid;
         this.lastModified = lastModified;
         this.publishReference = publishReference;
+        this.blocks = blocks;
     }
 
     public Design getDesign() {
@@ -106,6 +108,10 @@ public class InternalComponents {
         return uuid;
     }
 
+    public List<Block> getBlocks() {
+        return blocks;
+    }
+
     @NotNull
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
@@ -136,10 +142,10 @@ public class InternalComponents {
         private AlternativeStandfirsts alternativeStandfirsts;
         private String pushNotificationsCohort;
         private String pushNotificationsText;
-
         private String uuid;
         private String publishReference;
         private Date lastModified;
+        private List<Block> blocks;
 
         public Builder() {
         }
@@ -214,6 +220,11 @@ public class InternalComponents {
             return this;
         }
 
+        public InternalComponents.Builder withBlocks(List<Block> blocks) {
+            this.blocks = blocks;
+            return this;
+        }
+
         public InternalComponents.Builder withValuesFrom(InternalComponents content) {
             return this.withDesign(content.getDesign())
                     .withTableOfContents(content.getTableOfContents())
@@ -228,7 +239,8 @@ public class InternalComponents {
                     .withPushNotificationsText(content.getPushNotificationsText())
                     .withUuid(content.getUuid())
                     .withPublishReference(content.getPublishReference())
-                    .withLastModified(content.getLastModified());
+                    .withLastModified(content.getLastModified())
+                    .withBlocks(content.getBlocks());
         }
 
         public InternalComponents build() {
@@ -246,7 +258,8 @@ public class InternalComponents {
                     pushNotificationsText,
                     uuid,
                     lastModified,
-                    publishReference);
+                    publishReference,
+                    blocks);
         }
     }
 }

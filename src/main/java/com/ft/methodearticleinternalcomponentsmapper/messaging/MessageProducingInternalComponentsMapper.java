@@ -3,7 +3,7 @@ package com.ft.methodearticleinternalcomponentsmapper.messaging;
 import com.ft.messagequeueproducer.MessageProducer;
 import com.ft.messaging.standards.message.v1.Message;
 import com.ft.methodearticleinternalcomponentsmapper.exception.InvalidMethodeContentException;
-import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleMarkedDeletedException;
+import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeMarkedDeletedException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleNotEligibleForPublishException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.MethodeArticleUnsupportedSourceCodeException;
 import com.ft.methodearticleinternalcomponentsmapper.exception.TransformationException;
@@ -40,7 +40,7 @@ public class MessageProducingInternalComponentsMapper {
             message = messageBuilder.buildMessage(
                     internalComponentsMapper.map(methodeContent, transactionId, messageTimestamp, false)
             );
-        } catch (MethodeArticleMarkedDeletedException e) {
+        } catch (MethodeMarkedDeletedException e) {
             LOGGER.info("Article with uuid={} marked as deleted. Delete message event is created.", methodeContent.getUuid());
             message = messageBuilder.buildDeletedInternalComponentsMessage(methodeContent.getUuid(), transactionId, messageTimestamp);
         } catch (MethodeArticleNotEligibleForPublishException e) {
