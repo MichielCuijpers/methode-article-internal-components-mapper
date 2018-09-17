@@ -9,7 +9,6 @@ import com.ft.methodearticleinternalcomponentsmapper.exception.TransformationExc
 import com.ft.methodearticleinternalcomponentsmapper.model.AlternativeStandfirsts;
 import com.ft.methodearticleinternalcomponentsmapper.model.AlternativeTitles;
 import com.ft.methodearticleinternalcomponentsmapper.model.Block;
-import com.ft.methodearticleinternalcomponentsmapper.model.Content;
 import com.ft.methodearticleinternalcomponentsmapper.model.Design;
 import com.ft.methodearticleinternalcomponentsmapper.model.EomFile;
 import com.ft.methodearticleinternalcomponentsmapper.model.Image;
