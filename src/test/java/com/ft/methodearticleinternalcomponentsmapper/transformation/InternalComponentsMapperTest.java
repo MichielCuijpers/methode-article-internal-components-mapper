@@ -115,7 +115,7 @@ public class InternalComponentsMapperTest {
         Map<String, MethodeArticleValidator> articleValidators = new HashMap<>();
         articleValidators.put(InternalComponentsMapper.SourceCode.FT, methodeArticleValidator);
         articleValidators.put(InternalComponentsMapper.SourceCode.CONTENT_PLACEHOLDER, methodeContentPlaceholderValidator);
-        articleValidators.put(InternalComponentsMapper.SourceCode.DynamicContent, methodeArticleValidator);
+        articleValidators.put(InternalComponentsMapper.SourceCode.DYNAMIC_CONTENT, methodeArticleValidator);
 
         internalComponentsMapper = new InternalComponentsMapper(bodyTransformer, htmlFieldProcessor, blogUuidResolver, articleValidators, API_HOST);
     }

@@ -74,7 +74,7 @@ public class InternalComponentsMapper {
     public interface SourceCode {
         String FT = "FT";
         String CONTENT_PLACEHOLDER = "ContentPlaceholder";
-        String DynamicContent = "DynamicContent";
+        String DYNAMIC_CONTENT = "DynamicContent";
     }
 
     private final FieldTransformer bodyTransformer;
@@ -134,13 +134,13 @@ public class InternalComponentsMapper {
             final Document valueDocument = getValueDocument(eomFile);
 
             String sourceCode = xpath.evaluate(SOURCE_ATTR_XPATH, attributesDocument);
-            if (!SourceCode.FT.equals(sourceCode) && !SourceCode.CONTENT_PLACEHOLDER.equals(sourceCode) && !SourceCode.DynamicContent.equals(sourceCode)) {
+            if (!SourceCode.FT.equals(sourceCode) && !SourceCode.CONTENT_PLACEHOLDER.equals(sourceCode) && !SourceCode.DYNAMIC_CONTENT.equals(sourceCode)) {
                 throw new MethodeArticleNotEligibleForPublishException(uuid);
             }
 
             final String type = determineType(xpath, attributesDocument, sourceCode);
 
-            Boolean previewParam = SourceCode.FT.equals(sourceCode) || SourceCode.DynamicContent.equals(sourceCode) ? preview : null;
+            Boolean previewParam = SourceCode.FT.equals(sourceCode) || SourceCode.DYNAMIC_CONTENT.equals(sourceCode) ? preview : null;
             PublishingStatus status = articleValidators.get(sourceCode).getPublishingStatus(eomFile, transactionId, previewParam);
             switch (status) {
                 case INELIGIBLE:
@@ -189,7 +189,7 @@ public class InternalComponentsMapper {
                 return internalComponentsBuilder.build();
             }
 
-            if(SourceCode.DynamicContent.equals(sourceCode)) {
+            if(SourceCode.DYNAMIC_CONTENT.equals(sourceCode)) {
                 return internalComponentsBuilder.build();
             }
 
@@ -253,7 +253,7 @@ public class InternalComponentsMapper {
             return CONTENT_PACKAGE;
         }
 
-        if(sourceCode.equals(SourceCode.DynamicContent)) {
+        if(sourceCode.equals(SourceCode.DYNAMIC_CONTENT)) {
             return Type.DYNAMIC_CONTENT;
         }
 

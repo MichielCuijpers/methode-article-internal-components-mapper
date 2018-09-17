@@ -30,7 +30,6 @@ public class MessageBuilder {
     private final SystemId systemId;
     private final ObjectMapper objectMapper;
 
-
     public MessageBuilder(UriBuilder contentUriBuilder, String systemId, ObjectMapper objectMapper) {
         this.contentUriBuilder = contentUriBuilder;
         this.systemId = SystemId.systemIdFromCode(systemId);
