@@ -76,12 +76,10 @@ public class MessageProducingInternalComponentsMapperTest {
         Date date = new Date();
         String uuid = UUID.randomUUID().toString();
         Message deletedContentMsg = mock(Message.class);
-        String contentType = "DynamicContent";
         MethodeMarkedDeletedException mockException = mock(MethodeMarkedDeletedException.class);
-        when(mockException.getType()).thenReturn(contentType);
 
         when(mapper.map(any(), anyString(), any(), eq(false))).thenThrow(mockException);
-        when(messageBuilder.buildDeletedInternalComponentsMessage(uuid, tid, date, contentType)).thenReturn(deletedContentMsg);
+        when(messageBuilder.buildDeletedInternalComponentsMessage(uuid, tid, date)).thenReturn(deletedContentMsg);
 
         msgProducingArticleMapper.mapInternalComponents(new EomFile.Builder().withUuid(uuid).build(), tid, date);
 
