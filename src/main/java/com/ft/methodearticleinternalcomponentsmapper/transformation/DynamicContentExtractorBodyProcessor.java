@@ -44,12 +44,10 @@ public class DynamicContentExtractorBodyProcessor implements BodyProcessor {
 
             extractDynamicContent(document, xPath);
 
-            body = serializeBody(document);
+            return serializeBody(document);
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException | XPathExpressionException e) {
             throw new BodyProcessingException(e);
         }
-
-        return body;
     }
 
     private void extractDynamicContent(Document document, XPath xPath) throws XPathExpressionException {

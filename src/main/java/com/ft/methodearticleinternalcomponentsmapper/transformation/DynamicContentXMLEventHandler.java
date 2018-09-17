@@ -18,6 +18,7 @@ public class DynamicContentXMLEventHandler extends BaseXMLEventHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(DynamicContentXMLEventHandler.class);
 
     private static final String FT_CONTENT_TAG = "ft-content";
+    private static final String DYNAMIC_CONTENT_TYPE = "http://www.ft.com/ontology/content/DynamicContent";
 
     private DynamicContentXMLParser dynamicContentXMLParser;
 
@@ -39,7 +40,7 @@ public class DynamicContentXMLEventHandler extends BaseXMLEventHandler {
         String apiHost = getApiHostFromContext(bodyProcessingContext);
 
         HashMap<String, String> attributes = new HashMap<>();
-        attributes.put("type", "http://www.ft.com/ontology/content/DynamicContent");
+        attributes.put("type", DYNAMIC_CONTENT_TYPE);
         attributes.put("url", String.format("http://%s/content/%s", apiHost, dynamicContentData.getUuid()));
         attributes.put("data-embedded", "true");
 
