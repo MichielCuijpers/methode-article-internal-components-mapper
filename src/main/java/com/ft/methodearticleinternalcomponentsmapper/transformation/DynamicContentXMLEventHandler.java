@@ -41,7 +41,7 @@ public class DynamicContentXMLEventHandler extends BaseXMLEventHandler {
 
         HashMap<String, String> attributes = new HashMap<>();
         attributes.put("type", DYNAMIC_CONTENT_TYPE);
-        attributes.put("url", String.format("http://%s/content/%s", apiHost, dynamicContentData.getUuid()));
+        attributes.put("url", String.format("https://%s/content/%s", apiHost, dynamicContentData.getUuid()));
         attributes.put("data-embedded", "true");
 
         eventWriter.writeStartTag(FT_CONTENT_TAG, attributes);
