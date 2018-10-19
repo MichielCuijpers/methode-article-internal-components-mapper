@@ -26,7 +26,6 @@ public class MethodeArticleInternalComponentsMapperConfiguration extends Configu
     private final List<String> interactiveGraphicsWhiteList;
     private final String contentUriPrefix;
     private final Map<String, String> contentTypeTemplates;
-    private final String apiHost;
     private final String canonicalUrlTemplate;
 
     public MethodeArticleInternalComponentsMapperConfiguration(@JsonProperty("consumer") ConsumerConfiguration consumerConfiguration,
@@ -40,7 +39,6 @@ public class MethodeArticleInternalComponentsMapperConfiguration extends Configu
                                                                @JsonProperty("validationConfiguration") ValidationConfiguration validationConfiguration,
                                                                @JsonProperty("contentUriPrefix") String contentUriPrefix,
                                                                @JsonProperty("contentTypeTemplates") Map<String, String> contentTypeTemplates,
-                                                               @JsonProperty("apiHost") String apiHost,
                                                                @JsonProperty("canonicalUrlTemplate") String canonicalUrlTemplate) {
         this.consumerConfiguration = consumerConfiguration;
         this.producerConfiguration = producerConfiguration;
@@ -53,7 +51,6 @@ public class MethodeArticleInternalComponentsMapperConfiguration extends Configu
         this.validationConfiguration = validationConfiguration;
         this.contentUriPrefix = contentUriPrefix;
         this.contentTypeTemplates = contentTypeTemplates;
-        this.apiHost = apiHost;
         this.canonicalUrlTemplate = canonicalUrlTemplate;
     }
 
@@ -116,11 +113,6 @@ public class MethodeArticleInternalComponentsMapperConfiguration extends Configu
     @NotNull
     public Map<String, String> getContentTypeTemplates() {
         return contentTypeTemplates;
-    }
-
-    @NotNull
-    public String getApiHost() {
-        return apiHost;
     }
 
     public String getCanonicalUrlTemplate() {
